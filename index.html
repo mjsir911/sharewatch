@@ -7,18 +7,18 @@
 </style>
 </head>
 <body>
-	<form onsubmit="video.src = vUrl.value; return false">
+	<form onsubmit="vid.src = vUrl.value; return false">
 		<input id="vUrl">
 		<input type="submit">
 	</form>
-<video id="video" controls</video>
-	
+	<video id="vid"
+	       controls
+	         onplay="ws.send(JSON.stringify({'event': event.type}))"
+	        onpause="ws.send(JSON.stringify({'event': event.type}))"
+	       onseeked="ws.send(JSON.stringify({'event': 'seek', 'args': [vid.currentTime]}))"
+	></video>
 	<script type="text/javascript">
-		var vid = document.querySelector("video")
 		vid.seek = function(time) {
-			vid.pause()
-			console.log(time)
-			console.log(vid.currentTime)
 			if (Math.abs(time - vid.currentTime) > 1) {
 				vid.currentTime = time
 			}
@@ -26,12 +26,11 @@
 		var ws = new WebSocket('ws://' + window.location.host + '/ws')
 		ws.addEventListener('message', e => {
 			payload = JSON.parse(e.data)
+			console.log(payload);
 			args = payload["args"] || []
+			console.log(args);
 			vid[payload["event"]](...args)
 		})
-		vid.addEventListener("play", (e) => ws.send(JSON.stringify({"event": "play"})))
-		vid.addEventListener("pause", (e) => ws.send(JSON.stringify({"event": "pause"})))
-		vid.addEventListener("seeked", (e) => ws.send(JSON.stringify({"event": "seek", "args": [vid.currentTime]})))
 	</script>
 </body>
 </html>
