@@ -7,9 +7,11 @@
 </style>
 </head>
 <body>
-<video controls
-	   src="https://r4---sn-8xgp1vo-p5ql.googlevideo.com/videoplayback?expire=1564282404&ei=xLk8XbeDHIPu8wTomY24Dg&ip=71.178.246.68&id=o-AA0QE7VsYMDjTkEkGJ74-W_QnErSqrarA4w3CkqCMtnh&itag=22&source=youtube&requiressl=yes&mm=31%2C29&mn=sn-8xgp1vo-p5ql%2Csn-p5qlsndk&ms=au%2Crdu&mv=m&mvi=3&pl=16&initcwndbps=1686250&mime=video%2Fmp4&ratebypass=yes&dur=3265.468&lmt=1533299451783444&mt=1564260696&fvip=4&c=WEB&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=ALgxI2wwRQIgLNQ-o37bDaG1XpoWwNlXe_OYt-DDkRVaN4XQzmgnFLYCIQDJDHtmF43MeU5HEK45gYatOfW7Hdf8m0l9wdIY30XrZg%3D%3D&lsparams=mm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AHylml4wRgIhAJsAL0_0ojbSNf3A99X1Bet5FNqY3Tsa1rGQh68QcAXyAiEAzYIWLJOAMXUAhWG65uc6A3pOVBinNGuEgdx9VW2Qgbk%3D">
-</video>
+	<form onsubmit="video.src = vUrl.value; return false">
+		<input id="vUrl">
+		<input type="submit">
+	</form>
+<video id="video" controls</video>
 	
 	<script type="text/javascript">
 		var vid = document.querySelector("video")
