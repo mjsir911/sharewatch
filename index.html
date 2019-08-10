@@ -7,30 +7,41 @@
 </style>
 </head>
 <body>
+	<div id="my_id"></div>
 	<form onsubmit="vid.src = vUrl.value; return false">
 		<input id="vUrl">
 		<input type="submit">
 	</form>
 	<video id="vid"
 	       controls
-	         onplay="ws.send(JSON.stringify({'event': event.type}))"
-	        onpause="ws.send(JSON.stringify({'event': event.type}))"
-	       onseeked="ws.send(JSON.stringify({'event': 'seek', 'args': [vid.currentTime]}))"
+	         onplay="conn.send({'event': event.type})"
+	        onpause="conn.send({'event': event.type})"
+	       onseeked="conn.send({'event': 'seek', 'args': [vid.currentTime]})"
 	></video>
+		<script src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js"></script>
 	<script type="text/javascript">
-		vid.seek = function(time) {
-			if (Math.abs(time - vid.currentTime) > 1) {
-				vid.currentTime = time
+		{
+			vid.seek = function(time) {
+				if (Math.abs(time - vid.currentTime) > 1) {
+					vid.currentTime = time
+				}
 			}
+
+
+			var peer = new Peer();
+			peer.on('open', function() {
+				my_id.textContent = peer.id
+			})
+			var conn;
+			peer.on('connection', function(my_conn) {
+				conn = my_conn;
+				conn.on('data', function(payload){
+					console.log(payload);
+					args = payload["args"] || []
+					vid[payload["event"]](...args)
+				});
+			});
 		}
-		var ws = new WebSocket('ws://' + window.location.host + '/ws')
-		ws.addEventListener('message', e => {
-			payload = JSON.parse(e.data)
-			console.log(payload);
-			args = payload["args"] || []
-			console.log(args);
-			vid[payload["event"]](...args)
-		})
 	</script>
 </body>
 </html>
